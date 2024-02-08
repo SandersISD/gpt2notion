@@ -12,6 +12,7 @@ from flask import Flask, request, jsonify
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
 
+# Please create your own .env file for the script.
 OPENAI_API_URL = os.getenv("OPENAI_API_URL")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_API_MODEL = os.getenv("OPENAI_API_MODEL")
