@@ -22,7 +22,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_API_VERSION = os.getenv("OPENAI_API_VERSION")
 OPENAI_API_MODEL = os.getenv("OPENAI_API_MODEL")
 
-NOTION_DRYRUN = os.getenv("NOTION_DRYRUN")
+NOTION_DRYRUN = int(os.getenv("NOTION_DRYRUN"))
 
 NOTION_INTEGRATION_KEY = os.getenv("NOTION_INTEGRATION_KEY")
 NOTION_DATABASE_1_ID = os.getenv("NOTION_DATABASE_1_ID")
@@ -70,6 +70,7 @@ def notionCreatePage(page_prop: dict, database):
     else:
         res = requests.post(create_url, headers=notion_headers, json=page_data)
         print(res.status_code)
+        print(res.text)
         return res
 
 # Preparing Sendable page data for creating a event
