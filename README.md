@@ -29,8 +29,10 @@ To set up GPT2Notion locally, follow these steps:
    ```
    
 3. Populate `.env`: Fill in the appropriate API keys and make `.env` in the same directory of `gpt2notion.py`
+   
+   Use `template.env` as a sample. 
 
-4. Run the application: After installing the dependencies, run the GPT2Notion application using the following command:
+5. Run the application: After installing the dependencies, run the GPT2Notion application using the following command:
    ```
    poetry run python gpt2notion.py
    ```
