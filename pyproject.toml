@@ -15,6 +15,7 @@ flask = "^3.0.1"
 notion-client = "^2.2.1"
 python-dotenv = "^1.0.1"
 gunicorn = "^21.2.0"
+waitress = "^3.0.0"
 
 [build-system]
 requires = ["poetry-core"]
