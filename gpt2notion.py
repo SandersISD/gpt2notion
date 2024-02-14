@@ -5,22 +5,33 @@ import json
 import httpx
 from dotenv import find_dotenv, load_dotenv
 from datetime import datetime, timezone
-from openai import OpenAI
+from openai import OpenAI, AzureOpenAI
 from flask import Flask, request, jsonify
 
 # Obtaining values in .env file
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
 
+
+
 # Please create your own .env file for the script.
+USE_AZURE = int(os.getenv("USE_AZURE"))
+
 OPENAI_API_URL = os.getenv("OPENAI_API_URL")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_API_VERSION = os.getenv("OPENAI_API_VERSION")
 OPENAI_API_MODEL = os.getenv("OPENAI_API_MODEL")
+
+NOTION_DRYRUN = os.getenv("NOTION_DRYRUN")
+
 NOTION_INTEGRATION_KEY = os.getenv("NOTION_INTEGRATION_KEY")
 NOTION_DATABASE_1_ID = os.getenv("NOTION_DATABASE_1_ID")
 NOTION_VERSION = os.getenv("NOTION_VERSION")
 NOTION_CREATE_URL = os.getenv("NOTION_CREATE_URL")
 NOTION_DATABASE_1_QUERY_URL = os.getenv("NOTION_DATABASE_1_QUERY_URL")
+
+if NOTION_DRYRUN:
+    print("Notion running in dry-run mode...")
 
 # Obtain the Current time for prompting the model
 current_time = datetime.now().isoformat()
@@ -53,10 +64,13 @@ def notionCreatePage(page_prop: dict, database):
         },
         "properties": page_prop
     }
-
-    res = requests.post(create_url, headers=notion_headers, json=page_data)
-    print(res.status_code)
-    return res
+    if NOTION_DRYRUN:
+        print(json.dumps(page_data, indent=2))
+        return None
+    else:
+        res = requests.post(create_url, headers=notion_headers, json=page_data)
+        print(res.status_code)
+        return res
 
 # Preparing Sendable page data for creating a event
 # Please Modify Your own structure of the properties in order for the page to be successfully create
@@ -118,15 +132,25 @@ def notionCreateEvent(event="", start=null, end=null, details=""):
 
     return True
 
-# Setup OpenAI Client
-openai_client = OpenAI(
-    base_url = OPENAI_API_URL,
-    api_key = OPENAI_API_KEY,
-    http_client=httpx.Client(
-            base_url = OPENAI_API_URL,
-            follow_redirects=True,
-    ),
-)
+if USE_AZURE:
+    print("Use AZURE")
+    # Setup OpenAI Client
+    openai_client = AzureOpenAI(
+    api_key=OPENAI_API_KEY,  
+    api_version=OPENAI_API_VERSION,
+    azure_endpoint=OPENAI_API_URL
+    )
+else:
+    print("Use OPENAI")
+    # Setup OpenAI Client
+    openai_client = OpenAI(
+        base_url = OPENAI_API_URL,
+        api_key = OPENAI_API_KEY,
+        http_client=httpx.Client(
+                base_url = OPENAI_API_URL,
+                follow_redirects=True,
+        ),
+    )
 
 # Define the tools/functions list for the model to use. Make sure the functions' names is exactly the same with the ones you define in the script.
 # In my case, e.g. notionCreateEvent was defined above and put in the list.
@@ -164,12 +188,19 @@ openai_tools_list = [
 ]
 
 def openaiChatCompletionRequest(messages, tools=None, tool_choice=None, model=OPENAI_API_MODEL):
-    response = openai_client.chat.completions.create(
-        model=model,
-        messages=messages,
-        tools=tools,
-        tool_choice=tool_choice,
-    )
+    if tools:
+        response = openai_client.chat.completions.create(
+            model=model,
+            messages=messages,
+            tools=tools, 
+            tool_choice="auto"
+            # tool_choice is auto, check docs
+        )
+    else:
+        response = openai_client.chat.completions.create(
+            model=model,
+            messages=messages,
+        )
     return response
 
 # Input the prompt to run the function defined in the script. Output a natural language message concluding the functions the model have done.
@@ -207,7 +238,7 @@ def openaiRunFunction(prompt):
 # Creating Flask. I have port-forward the access of the port 5000  
 app = Flask(__name__)
 
-@app.route("/assitant", methods=['POST'])
+@app.route("/assistant", methods=['POST']) # past was assitant
 def obtain_payload():
     payload = request.get_data()
     payload = json.loads(payload)
@@ -219,6 +250,6 @@ def obtain_payload():
     return reply
 
 if __name__ == "__main__":
-    app.run("0.0.0.0")
+    app.run("0.0.0.0", debug=True)
 
 
