@@ -16,6 +16,18 @@ By leveraging the power of OpenAI's GPT-3.5 language model, GPT2Notion enables u
 
 ## Installation and Setup
 
+# Notion Setup
+
+1. Go to https://www.notion.so/my-integrations
+
+2. Create and new integration. Select the workplace you are integrating. Copy and Save the integration key (secret_xxxxxxxxx...) for ".env".
+
+3. Go to the database page you would like to connect. Find your database key in the url. https://www.notion.so/**xxxxxxxxxxxa**?v=... Save it up for ".env" .
+
+4. In the database page, go to more option in the top-right-hand corner and find "Add connections". Find the integration you added previously.
+
+# Script Setup
+
 To set up GPT2Notion locally, follow these steps:
 
 1. Install Poetry: GPT2Notion uses Poetry as a dependency manager. Start by installing Poetry using the following command:
@@ -36,6 +48,7 @@ To set up GPT2Notion locally, follow these steps:
    ```
    poetry run python gpt2notion.py
    ```
+
 
 **Steps to securely host the server over the internet using self-hosting / cloud hosting will be added soon.**
 
