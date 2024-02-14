@@ -68,7 +68,9 @@ Try something else.
 Important note for HKUST Azure OpenAI API users:
 
 > From [the officlal documentation](https://itsc.hkust.edu.hk/services/it-infrastructure/azure-openai-api-service), "Supported OpenAI API Models and Versions" does NOT support specifying model version such as `gpt-35-turbo-1106` unlike other API endpoints!
+>
 > It just occurs that `gpt-35-turbo-16k` supports to use `tools` parameter, but not `gpt-35-turbo`.
+>
 > In an ideal world, HKUST should allow specifying model version. However, the current arrangement may be due to insurmountable unlimitations. 
 
 ---
