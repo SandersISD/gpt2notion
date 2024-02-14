@@ -71,7 +71,7 @@ Important note for HKUST Azure OpenAI API users:
 >
 > It just occurs that `gpt-35-turbo-16k` supports to use `tools` parameter, but not `gpt-35-turbo`.
 >
-> In an ideal world, HKUST should allow specifying model version. However, the current arrangement may be due to insurmountable unlimitations. 
+> In an ideal world, HKUST should allow specifying model version. However, the current arrangement may be due to insurmountable limitations. 
 
 ---
 
