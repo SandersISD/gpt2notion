@@ -47,6 +47,30 @@ You need to send a POST request to `/assistant` with a JSON payload containing a
 
 The value of the `"prompt"` key should be the task description for which you want GPT2Notion to generate the to-do item. The endpoint will return the response from ChatGPT summarizing what has been done. 
 
+## Testing ChatGPT API only
+
+Since integration with Notion proves to be tricky, to separate variables, use `NOTION_DRYRUN=1` to bypass Notion integration. 
+
+What would otherwise be submitted to Notion will be printed to console instead. 
+
+Manually inspect for any errors before enabling Notion integration. 
+
+## Issues with incompatible ChatGPT models
+
+**Only new OpenAI API version support to use `tools` parameter for calling Notion API.**
+
+**Only new ChatGPT models supports to use `tools` parameter for calling Notion API.**
+
+If you see `openai.NotFoundError: Error code: 404 - {'error': {'message': 'Unrecognized request argument supplied: tools', 'type': 'invalid_request_error', 'param': None, 'code': None}}`, the model and/or the API does not implement the `tools` parameter. 
+
+Try something else. 
+
+Important note for HKUST Azure OpenAI API users:
+
+> From [the officlal documentation](https://itsc.hkust.edu.hk/services/it-infrastructure/azure-openai-api-service), "Supported OpenAI API Models and Versions" does NOT support specifying model version such as `gpt-35-turbo-1106` unlike other API endpoints!
+> It just occurs that `gpt-35-turbo-16k` supports to use `tools` parameter, but not `gpt-35-turbo`.
+> In an ideal world, HKUST should allow specifying model version. However, the current arrangement may be due to insurmountable unlimitations. 
+
 ---
 
 This is a personal project initiated because I wanted to do voice control for my Notion eco-system.
