@@ -16,7 +16,7 @@ By leveraging the power of OpenAI's GPT-3.5 language model, GPT2Notion enables u
 
 ## Installation and Setup
 
-# Notion Setup
+### Notion Setup
 
 1. Go to https://www.notion.so/my-integrations
 
@@ -26,7 +26,7 @@ By leveraging the power of OpenAI's GPT-3.5 language model, GPT2Notion enables u
 
 4. In the database page, go to more option in the top-right-hand corner and find "Add connections". Find the integration you added previously.
 
-# Script Setup
+### Script Setup
 
 To set up GPT2Notion locally, follow these steps:
 
