@@ -32,11 +32,8 @@ NOTION_DATABASE_1_QUERY_URL = os.getenv("NOTION_DATABASE_1_QUERY_URL")
 
 if NOTION_DRYRUN:
     print("Notion running in dry-run mode...")
-
-# Obtain the Current time for prompting the model
-current_time = datetime.now().isoformat()
-print(current_time)
-
+else:
+    print("Notion running in Normal mode...")
 
 # Initialise Headers for requests. Required by Notion 
 notion_headers = {
@@ -155,38 +152,45 @@ else:
 
 # Define the tools/functions list for the model to use. Make sure the functions' names is exactly the same with the ones you define in the script.
 # In my case, e.g. notionCreateEvent was defined above and put in the list.
-openai_tools_list = [
-    {
-        "type": "function",
-        "function": {
-            "name": "notionCreateEvent",
-            "description": "create an event in notion",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "event": {
-                        "type": "string",
-                        "description": "The name of the event.",
+def openaiGetToolsList():
+
+    # Obtain the Current time for prompting the model
+    current_time = datetime.now().isoformat()
+    print("Current Time is:\t" + current_time)
+
+    # Return Tools list
+    return [
+        {
+            "type": "function",
+            "function": {
+                "name": "notionCreateEvent",
+                "description": "create an event in notion",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "event": {
+                            "type": "string",
+                            "description": "The name of the event.",
+                        },
+                        "start": {
+                            "type": "string",
+                            "description": "The start time of the event. e.g. 2024-02-02T13:00:00.000+08:00. The current time is " + current_time,
+                        },
+                        "end": {
+                            "type": "string",
+                            "description": "The end time of the event. e.g. 2024-02-02T18:00:00.000+08:00. The current time is " + current_time + \
+                                ". Return 'n' if there is no ending time for the event.",
+                        },
+                        "details": {
+                            "type": "string",
+                            "description": "The extra details of the event. Return nothing if there is no detail for the event",
+                        },
                     },
-                    "start": {
-                        "type": "string",
-                        "description": "The start time of the event. e.g. 2024-02-02T13:00:00.000+08:00. The current time is " + current_time,
-                    },
-                    "end": {
-                        "type": "string",
-                        "description": "The end time of the event. e.g. 2024-02-02T18:00:00.000+08:00. The current time is " + current_time + \
-                            ". Return 'n' if there is no ending time for the event.",
-                    },
-                    "details": {
-                        "type": "string",
-                        "description": "The extra details of the event. Return nothing if there is no detail for the event",
-                    },
+                    "required": ["event", "start","end","details"],
                 },
-                "required": ["event", "start","end","details"],
-            },
-        }
-    },
-]
+            }
+        },
+    ]
 
 def openaiChatCompletionRequest(messages, tools=None, tool_choice=None, model=OPENAI_API_MODEL):
     if tools:
@@ -213,7 +217,7 @@ def openaiRunFunction(prompt):
                      Determine tasks you need to do by the input prompt of the user. Don't make assumptions about what values to plug into functions."})
     messages.append({"role": "user", "content": prompt})
     chat_response = openaiChatCompletionRequest(
-        messages, tools=openai_tools_list
+        messages, tools= openaiGetToolsList()
     )
     assistant_message = chat_response.choices[0].message
 
