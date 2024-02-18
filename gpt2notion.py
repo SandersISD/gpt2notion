@@ -208,8 +208,13 @@ def openaiChatCompletionRequest(messages, tools=None, tool_choice=None, model=OP
         )
     return response
 
+def humanified_finished_functions_list(finished_functions_list):
+    return ". ".join(f"Function name: ```{func_name}```, function paramaters: ```{';'.join(f'{k}={v}' for k,v in json.loads(func_args).items())}```" for func_name, func_args in finished_functions_list.values())
+
 # Input the prompt to run the function defined in the script. Output a natural language message concluding the functions the model have done.
-def openaiRunFunction(prompt):
+def openaiRunFunction(prompt, humanify_input_for_summarization=True, json_out=False):
+    print("humanify_input_for_summarization:", humanify_input_for_summarization)
+    print("json_out:", json_out)
     messages = []
     finished_functions_list = {}
 
@@ -229,16 +234,21 @@ def openaiRunFunction(prompt):
         chosen_function(**function_paramas)
         finished_functions_list[call.id] = [call.function.name, call.function.arguments]
 
+    print(finished_functions_list)
+
+    ai_summation_input = humanified_finished_functions_list(finished_functions_list)
     messages = []
     messages.append({"role": "system", "content": "Another AI have done tasks with functions and the Finished functions list given.\
                       Make an conclusion message replying the user listing the tasks done. Make it short and simple. Details can be ignored."})
-    messages.append({"role": "user", "content": str(finished_functions_list)})
+    messages.append({"role": "user", "content": ai_summation_input if humanify_input_for_summarization else str(finished_functions_list)})
     reply_response = openaiChatCompletionRequest(
         messages
     )
     reply_message = reply_response.choices[0].message.content
+
+    output_json = {"message":reply_message, "function_calls": list(finished_functions_list.values()), "ai_summation_input": ai_summation_input}
         
-    return reply_message
+    return json.dumps(output_json) if json_out else reply_message
 
 # Creating Flask. I have port-forward the access of the port 5000  
 app = Flask(__name__)
@@ -248,8 +258,10 @@ def obtain_payload():
     payload = request.get_data()
     payload = json.loads(payload)
     prompt = payload["prompt"]
+    humanify2 = payload.get('humanify2', True)
+    json_out = payload.get('json', False)
     if prompt:     
-        reply = openaiRunFunction(prompt)
+        reply = openaiRunFunction(prompt, humanify2, json_out)
     else:
         reply = "No Data was inputed."
     return reply
