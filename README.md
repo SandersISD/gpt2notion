@@ -90,3 +90,46 @@ Important note for HKUST Azure OpenAI API users:
 
 This is a personal project initiated because I wanted to do voice control for my Notion eco-system.
 This Read Me will be updated soon. 
+
+## Advanced
+### Add Callable Functions
+
+You can def a new function for the Model easier now by using the pre-defined object **Callables** and **Callables_Props**.
+
+1. Define you function in the main py file (gpt2notion.py)
+   ```
+   def func1(param1, param2, param3):
+   ```
+2. Create a new Callables object using the format below:
+   ```
+   Call_func1 = Callables(
+    func1,
+    "Description of func1",
+    Callables_Props(
+        "Name of param1 i.e. param1",
+        "type e.g. string", 
+        "Description and Examples of the content of parameter", 
+        True # or false if the parameter is not required
+    ),
+    Callables_Props(
+        "Name of param2 i.e. param2",
+        "type e.g. string", 
+        "Description and Examples of the content of parameter", 
+        True # or false if the parameter is not required
+    ),
+    Callables_Props(
+        "Name of param3 i.e. param3",
+        "type e.g. string", 
+        "Description and Examples of the content of parameter", 
+        True # or false if the parameter is not required
+    ),
+   ```
+3. Add your Callables to the tool list:
+   ```
+   tool_list = CallableList(
+      Call_func1
+      Call_func2
+      Call_func3
+      ...
+   )
+   ```

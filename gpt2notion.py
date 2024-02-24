@@ -12,8 +12,6 @@ from flask import Flask, request, jsonify
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
 
-
-
 # Please create your own .env file for the script.
 USE_AZURE = int(os.getenv("USE_AZURE"))
 
@@ -35,101 +33,6 @@ if NOTION_DRYRUN:
 else:
     print("Notion running in Normal mode...")
 
-# Initialise Headers for requests. Required by Notion 
-notion_headers = {
-    "Authorization": "Bearer " + NOTION_INTEGRATION_KEY,
-    "Content-Type": "application/json",
-    "Notion-Version": NOTION_VERSION
-}
-
-# Define values for python to successfully interpret "null", "true", and "false" in the dictionary below. 
-# I am not sure if theres other way but it is needed for now to make things work.
-null = None
-true = True
-false = False
-
-# Creating Page in Notion by sending the page data
-def notionCreatePage(page_prop: dict, database):
-    
-    print("Creating a Page in Notion with:\t" + database)
-
-    create_url = NOTION_CREATE_URL
-
-    page_data = {
-        "parent": {
-            "database_id": database
-        },
-        "properties": page_prop
-    }
-    if NOTION_DRYRUN:
-        print(json.dumps(page_data, indent=2))
-        return None
-    else:
-        res = requests.post(create_url, headers=notion_headers, json=page_data)
-        print(res.status_code)
-        print(res.text)
-        return res
-
-# Preparing Sendable page data for creating a event
-# Please Modify Your own structure of the properties in order for the page to be successfully create
-def notionCreateEvent(event="", start=null, end=null, details=""):
-
-    # Please refer to the prompt about creating the event
-    if end == 'n': 
-        end=null
-
-    print("Preparing An Event...")
-
-    data = {
-        "Date": {
-            "date": {
-                "start": start,
-                "end": end,
-                "time_zone": null
-            }
-        },
-        "Description": {
-            "rich_text": [
-                {
-                    "type": "text",
-                    "text": {
-                        "content": details,
-                        "link": null
-                    },
-                }
-            ]
-        },
-        "Name": {
-            "title": [
-                {
-                    "type": "text",
-                    "text": {
-                        "content": event,
-                        "link": null
-                    },
-                    "annotations": {
-                        "bold": false,
-                        "italic": false,
-                        "strikethrough": false,
-                        "underline": false,
-                        "code": false,
-                        "color": "default"
-                    },
-                    "plain_text": event,
-                    "href": null
-                }
-            ]
-        }
-    }
-
-    print("Created Data:\t")
-    print(data)
-    print("-------------")
-
-    notionCreatePage(data, NOTION_DATABASE_1_ID)
-
-    return True
-
 if USE_AZURE:
     print("Use AZURE")
     # Setup OpenAI Client
@@ -150,47 +53,112 @@ else:
         ),
     )
 
-# Define the tools/functions list for the model to use. Make sure the functions' names is exactly the same with the ones you define in the script.
-# In my case, e.g. notionCreateEvent was defined above and put in the list.
-def openaiGetToolsList():
+from setup_notion import NotionDatabase
+from setup_callables import *
 
-    # Obtain the Current time for prompting the model
-    current_time = datetime.now().isoformat()
-    print("Current Time is:\t" + current_time)
+#Setting up database
+MyNotionEvents = NotionDatabase(
+    NOTION_INTEGRATION_KEY, 
+    NOTION_DATABASE_1_ID,
+    name = "Event",
+    dry_run = NOTION_DRYRUN
+    )
 
-    # Return Tools list
-    return [
-        {
-            "type": "function",
-            "function": {
-                "name": "notionCreateEvent",
-                "description": "create an event in notion",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "event": {
-                            "type": "string",
-                            "description": "The name of the event.",
-                        },
-                        "start": {
-                            "type": "string",
-                            "description": "The start time of the event. e.g. 2024-02-02T13:00:00.000+08:00. The current time is " + current_time,
-                        },
-                        "end": {
-                            "type": "string",
-                            "description": "The end time of the event. e.g. 2024-02-02T18:00:00.000+08:00. The current time is " + current_time + \
-                                ". Return 'n' if there is no ending time for the event.",
-                        },
-                        "details": {
-                            "type": "string",
-                            "description": "The extra details of the event. Return nothing if there is no detail for the event",
-                        },
-                    },
-                    "required": ["event", "start","end","details"],
-                },
+# Preparing Sendable page data for creating a event
+# Please Modify Your own structure of the properties in order for the page to be successfully create
+def notionCreateEvent(event="", start=None, end=None, details=""):
+
+    # Please refer to the prompt about creating the event
+    if end == 'n': 
+        end=None
+
+    print("Preparing An Event...")
+
+    data = {
+        "Date": {
+            "date": {
+                "start": start,
+                "end": end,
+                "time_zone": None
             }
         },
-    ]
+        "Description": {
+            "rich_text": [
+                {
+                    "type": "text",
+                    "text": {
+                        "content": details,
+                        "link": None
+                    },
+                }
+            ]
+        },
+        "Name": {
+            "title": [
+                {
+                    "type": "text",
+                    "text": {
+                        "content": event,
+                        "link": None
+                    },
+                    "annotations": {
+                        "bold": False,
+                        "italic": False,
+                        "strikethrough": False,
+                        "underline": False,
+                        "code": False,
+                        "color": "default"
+                    },
+                    "plain_text": event,
+                    "href": None
+                }
+            ]
+        }
+    }
+
+    print("Created Data:\t")
+    print(data)
+    print("-------------")
+
+    MyNotionEvents.createPage(data)
+
+    return True
+
+Call_notionCreateEvent = Callables(
+    notionCreateEvent,
+    "Create an event in notion",
+    Callables_Props(
+        "event",
+        "string", 
+        "The name of the event.", 
+        True
+    ),
+    Callables_Props(
+        "start",
+        "string", 
+        "The start time of the event. e.g. 2024-02-02T13:00:00.000+08:00. \
+            The current time is " + datetime.now().isoformat(), 
+        True
+    ),
+    Callables_Props(
+        "end",
+        "string", 
+        "The end time of the event. e.g. 2024-02-02T18:00:00.000+08:00. \
+            The current time is " + datetime.now().isoformat() + \
+                ". Return 'n' if there is no ending time for the event.", 
+        True
+    ),
+    Callables_Props(
+        "details",
+        "string", 
+        "The extra details of the event. Return nothing if there is no detail for the event", 
+        True
+    )
+)
+
+tool_list = CallableList(
+    Call_notionCreateEvent
+)
 
 def openaiChatCompletionRequest(messages, tools=None, tool_choice=None, model=OPENAI_API_MODEL):
     if tools:
@@ -221,8 +189,11 @@ def openaiRunFunction(prompt, humanify_input_for_summarization=True, json_out=Fa
     messages.append({"role": "system", "content": "You are a assitant to do tasks by plugging values into function. \
                      Determine tasks you need to do by the input prompt of the user. Don't make assumptions about what values to plug into functions."})
     messages.append({"role": "user", "content": prompt})
+    print(tool_list)
     chat_response = openaiChatCompletionRequest(
-        messages, tools= openaiGetToolsList()
+        messages, tools= CallableList(
+            Call_notionCreateEvent
+        )   
     )
     assistant_message = chat_response.choices[0].message
 
@@ -260,7 +231,7 @@ def obtain_payload():
     prompt = payload["prompt"]
     humanify2 = payload.get('humanify2', True)
     json_out = payload.get('json', False)
-    if prompt:     
+    if prompt:   
         reply = openaiRunFunction(prompt, humanify2, json_out)
     else:
         reply = "No Data was inputed."
