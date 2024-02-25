@@ -140,16 +140,13 @@ call_notion_create_event = Callables(
     CallablesProps(
         "start",
         "string", 
-        "The start time of the event. e.g. 2024-02-02T13:00:00.000+08:00. \
-            The current time is " + datetime.now().isoformat(), 
+        "The start time of the event. e.g. 2024-02-02T13:00:00.000+08:00.",
         True
     ),
     CallablesProps(
         "end",
         "string", 
-        "The end time of the event. e.g. 2024-02-02T18:00:00.000+08:00. \
-            The current time is " + datetime.now().isoformat() + \
-                ". Return 'n' if there is no ending time for the event.", 
+        "The end time of the event. e.g. 2024-02-02T18:00:00.000+08:00. Return 'n' if there is no ending time for the event.", 
         True
     ),
     CallablesProps(
@@ -187,14 +184,15 @@ def humanified_finished_functions_list(finished_functions_list):
     return ". ".join(f"Function name: ```{func_name}```, function paramaters: ```{';'.join(f'{k}={v}' for k,v in json.loads(func_args).items())}```" for func_name, func_args in finished_functions_list.values())
 
 # Input the prompt to run the function defined in the script. Output a natural language message concluding the functions the model have done.
-def openaiRunFunction(prompt, humanify_input_for_summarization=True, json_out=False):
+def openaiRunFunction(prompt, humanify_input_for_summarization=True, json_out=False, call_time = datetime.now().isoformat()):
     print("humanify_input_for_summarization:", humanify_input_for_summarization)
     print("json_out:", json_out)
     messages = []
     finished_functions_list = {}
 
     messages.append({"role": "system", "content": "You are a assitant to do tasks by plugging values into function. \
-                     Determine tasks you need to do by the input prompt of the user. Don't make assumptions about what values to plug into functions."})
+                     Determine tasks you need to do by the input prompt of the user. Don't make assumptions about what values to plug into functions. \
+                     The current time in iso format is: " + call_time})
     messages.append({"role": "user", "content": prompt})
     print(tool_list)
     chat_response = openaiChatCompletionRequest(
