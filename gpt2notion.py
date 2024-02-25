@@ -8,6 +8,9 @@ from datetime import datetime, timezone
 from openai import OpenAI, AzureOpenAI
 from flask import Flask, request, jsonify
 
+from setup_notion import NotionDatabase
+from setup_callables import *
+
 # Obtaining values in .env file
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)
@@ -22,11 +25,8 @@ OPENAI_API_MODEL = os.getenv("OPENAI_API_MODEL")
 
 NOTION_DRYRUN = int(os.getenv("NOTION_DRYRUN"))
 
-NOTION_INTEGRATION_KEY = os.getenv("NOTION_INTEGRATION_KEY")
+NOTION_INTEGRATION_1_KEY = os.getenv("NOTION_INTEGRATION_1_KEY")
 NOTION_DATABASE_1_ID = os.getenv("NOTION_DATABASE_1_ID")
-NOTION_VERSION = os.getenv("NOTION_VERSION")
-NOTION_CREATE_URL = os.getenv("NOTION_CREATE_URL")
-NOTION_DATABASE_1_QUERY_URL = os.getenv("NOTION_DATABASE_1_QUERY_URL")
 
 if NOTION_DRYRUN:
     print("Notion running in dry-run mode...")
@@ -53,12 +53,12 @@ else:
         ),
     )
 
-from setup_notion import NotionDatabase
-from setup_callables import *
+# The following part is for user-defined functions
+# Please refer to Advance part in README.md for how you can define a callable tool for openai to use  
 
 #Setting up database
 MyNotionEvents = NotionDatabase(
-    NOTION_INTEGRATION_KEY, 
+    NOTION_INTEGRATION_1_KEY, 
     NOTION_DATABASE_1_ID,
     name = "Event",
     dry_run = NOTION_DRYRUN
@@ -160,6 +160,8 @@ tool_list = CallableList(
     Call_notionCreateEvent
 )
 
+# Ending of the user-defined functions
+
 def openaiChatCompletionRequest(messages, tools=None, tool_choice=None, model=OPENAI_API_MODEL):
     if tools:
         response = openai_client.chat.completions.create(
@@ -175,6 +177,7 @@ def openaiChatCompletionRequest(messages, tools=None, tool_choice=None, model=OP
             messages=messages,
         )
     return response
+
 
 def humanified_finished_functions_list(finished_functions_list):
     return ". ".join(f"Function name: ```{func_name}```, function paramaters: ```{';'.join(f'{k}={v}' for k,v in json.loads(func_args).items())}```" for func_name, func_args in finished_functions_list.values())
