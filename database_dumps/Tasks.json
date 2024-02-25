@@ -1,0 +1,332 @@
+{
+    "object": "list",
+    "results": [
+        {
+            "object": "page",
+            "id": "6a816355-2828-4882-8e05-fcd1882865ad",
+            "created_time": "2024-02-23T08:09:00.000Z",
+            "last_edited_time": "2024-02-25T15:19:00.000Z",
+            "created_by": {
+                "object": "user",
+                "id": "23329e55-0e59-404c-b689-0a113418d025"
+            },
+            "last_edited_by": {
+                "object": "user",
+                "id": "23329e55-0e59-404c-b689-0a113418d025"
+            },
+            "cover": null,
+            "icon": null,
+            "parent": {
+                "type": "database_id",
+                "database_id": "44f1bb70-24e9-4328-bac3-ee753d7e9309"
+            },
+            "archived": false,
+            "properties": {
+                "Cost": {
+                    "id": "aGc%3C",
+                    "type": "select",
+                    "select": {
+                        "id": "]q{T",
+                        "name": "Low",
+                        "color": "green"
+                    }
+                },
+                "Date": {
+                    "id": "yrZB",
+                    "type": "date",
+                    "date": null
+                },
+                "Tasks": {
+                    "id": "title",
+                    "type": "title",
+                    "title": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "content": "Credit Card Cancelling",
+                                "link": null
+                            },
+                            "annotations": {
+                                "bold": false,
+                                "italic": false,
+                                "strikethrough": false,
+                                "underline": false,
+                                "code": false,
+                                "color": "default"
+                            },
+                            "plain_text": "Credit Card Cancelling",
+                            "href": null
+                        }
+                    ]
+                }
+            },
+            "url": "https://www.notion.so/Credit-Card-Cancelling-6a816355282848828e05fcd1882865ad",
+            "public_url": null
+        },
+        {
+            "object": "page",
+            "id": "b30c6f13-c724-490e-acbe-e99fa2a5d3fd",
+            "created_time": "2024-02-11T08:00:00.000Z",
+            "last_edited_time": "2024-02-25T15:19:00.000Z",
+            "created_by": {
+                "object": "user",
+                "id": "23329e55-0e59-404c-b689-0a113418d025"
+            },
+            "last_edited_by": {
+                "object": "user",
+                "id": "23329e55-0e59-404c-b689-0a113418d025"
+            },
+            "cover": null,
+            "icon": null,
+            "parent": {
+                "type": "database_id",
+                "database_id": "44f1bb70-24e9-4328-bac3-ee753d7e9309"
+            },
+            "archived": false,
+            "properties": {
+                "Cost": {
+                    "id": "aGc%3C",
+                    "type": "select",
+                    "select": {
+                        "id": "]q{T",
+                        "name": "Low",
+                        "color": "green"
+                    }
+                },
+                "Date": {
+                    "id": "yrZB",
+                    "type": "date",
+                    "date": null
+                },
+                "Tasks": {
+                    "id": "title",
+                    "type": "title",
+                    "title": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "content": "IELTS Booking",
+                                "link": null
+                            },
+                            "annotations": {
+                                "bold": false,
+                                "italic": false,
+                                "strikethrough": false,
+                                "underline": false,
+                                "code": false,
+                                "color": "default"
+                            },
+                            "plain_text": "IELTS Booking",
+                            "href": null
+                        }
+                    ]
+                }
+            },
+            "url": "https://www.notion.so/IELTS-Booking-b30c6f13c724490eacbee99fa2a5d3fd",
+            "public_url": null
+        },
+        {
+            "object": "page",
+            "id": "7144cb7f-c909-4495-994b-8fce64f13944",
+            "created_time": "2024-02-06T09:51:00.000Z",
+            "last_edited_time": "2024-02-25T15:18:00.000Z",
+            "created_by": {
+                "object": "user",
+                "id": "23329e55-0e59-404c-b689-0a113418d025"
+            },
+            "last_edited_by": {
+                "object": "user",
+                "id": "23329e55-0e59-404c-b689-0a113418d025"
+            },
+            "cover": null,
+            "icon": null,
+            "parent": {
+                "type": "database_id",
+                "database_id": "44f1bb70-24e9-4328-bac3-ee753d7e9309"
+            },
+            "archived": false,
+            "properties": {
+                "Cost": {
+                    "id": "aGc%3C",
+                    "type": "select",
+                    "select": {
+                        "id": "^xje",
+                        "name": "High",
+                        "color": "red"
+                    }
+                },
+                "Date": {
+                    "id": "yrZB",
+                    "type": "date",
+                    "date": {
+                        "start": "2024-02-07",
+                        "end": null,
+                        "time_zone": null
+                    }
+                },
+                "Tasks": {
+                    "id": "title",
+                    "type": "title",
+                    "title": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "content": "Obsidian",
+                                "link": null
+                            },
+                            "annotations": {
+                                "bold": false,
+                                "italic": false,
+                                "strikethrough": false,
+                                "underline": false,
+                                "code": false,
+                                "color": "default"
+                            },
+                            "plain_text": "Obsidian",
+                            "href": null
+                        }
+                    ]
+                }
+            },
+            "url": "https://www.notion.so/Obsidian-7144cb7fc9094495994b8fce64f13944",
+            "public_url": null
+        },
+        {
+            "object": "page",
+            "id": "3c82be84-d8e6-4721-b8ee-bccea932c349",
+            "created_time": "2024-02-06T09:51:00.000Z",
+            "last_edited_time": "2024-02-25T15:18:00.000Z",
+            "created_by": {
+                "object": "user",
+                "id": "23329e55-0e59-404c-b689-0a113418d025"
+            },
+            "last_edited_by": {
+                "object": "user",
+                "id": "23329e55-0e59-404c-b689-0a113418d025"
+            },
+            "cover": null,
+            "icon": null,
+            "parent": {
+                "type": "database_id",
+                "database_id": "44f1bb70-24e9-4328-bac3-ee753d7e9309"
+            },
+            "archived": false,
+            "properties": {
+                "Cost": {
+                    "id": "aGc%3C",
+                    "type": "select",
+                    "select": {
+                        "id": "MYkj",
+                        "name": "Mid",
+                        "color": "yellow"
+                    }
+                },
+                "Date": {
+                    "id": "yrZB",
+                    "type": "date",
+                    "date": {
+                        "start": "2024-02-07",
+                        "end": null,
+                        "time_zone": null
+                    }
+                },
+                "Tasks": {
+                    "id": "title",
+                    "type": "title",
+                    "title": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "content": "COMP 2011 Lab 1",
+                                "link": null
+                            },
+                            "annotations": {
+                                "bold": false,
+                                "italic": false,
+                                "strikethrough": false,
+                                "underline": false,
+                                "code": false,
+                                "color": "default"
+                            },
+                            "plain_text": "COMP 2011 Lab 1",
+                            "href": null
+                        }
+                    ]
+                }
+            },
+            "url": "https://www.notion.so/COMP-2011-Lab-1-3c82be84d8e64721b8eebccea932c349",
+            "public_url": null
+        },
+        {
+            "object": "page",
+            "id": "aa55e8bc-8deb-4c28-ab60-74f922b1767c",
+            "created_time": "2024-02-02T07:20:00.000Z",
+            "last_edited_time": "2024-02-25T15:18:00.000Z",
+            "created_by": {
+                "object": "user",
+                "id": "23329e55-0e59-404c-b689-0a113418d025"
+            },
+            "last_edited_by": {
+                "object": "user",
+                "id": "23329e55-0e59-404c-b689-0a113418d025"
+            },
+            "cover": null,
+            "icon": null,
+            "parent": {
+                "type": "database_id",
+                "database_id": "44f1bb70-24e9-4328-bac3-ee753d7e9309"
+            },
+            "archived": false,
+            "properties": {
+                "Cost": {
+                    "id": "aGc%3C",
+                    "type": "select",
+                    "select": {
+                        "id": "^xje",
+                        "name": "High",
+                        "color": "red"
+                    }
+                },
+                "Date": {
+                    "id": "yrZB",
+                    "type": "date",
+                    "date": {
+                        "start": "2024-02-09",
+                        "end": null,
+                        "time_zone": null
+                    }
+                },
+                "Tasks": {
+                    "id": "title",
+                    "type": "title",
+                    "title": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "content": "AI wearables: Mechanism",
+                                "link": null
+                            },
+                            "annotations": {
+                                "bold": false,
+                                "italic": false,
+                                "strikethrough": false,
+                                "underline": false,
+                                "code": false,
+                                "color": "default"
+                            },
+                            "plain_text": "AI wearables: Mechanism",
+                            "href": null
+                        }
+                    ]
+                }
+            },
+            "url": "https://www.notion.so/AI-wearables-Mechanism-aa55e8bc8deb4c28ab6074f922b1767c",
+            "public_url": null
+        }
+    ],
+    "next_cursor": null,
+    "has_more": false,
+    "type": "page_or_database",
+    "page_or_database": {},
+    "request_id": "3cd43e48-592b-4a3c-a95f-90ddcd130594"
+}

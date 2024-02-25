@@ -1,4 +1,4 @@
-class Callables_Props:
+class CallablesProps:
     def __init__(self, name: str, type: str, description: str, required: bool):
         self.name = name
         self.type = type
@@ -6,7 +6,7 @@ class Callables_Props:
         self.required = required
 
 class Callables:
-    def __init__(self, func, description: str, *args: Callables_Props):
+    def __init__(self, func, description: str, *args: CallablesProps):
         self.func = func
         self.description = description
         self.args = args
@@ -36,7 +36,7 @@ class Callables:
         print("Created: " + str(tool_doc))
         return tool_doc
 
-def CallableList(*clbs: Callables):
+def callable_list(*clbs: Callables):
     list = []
     for clb in clbs:
         list.append(clb.formatting())

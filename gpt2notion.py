@@ -1,6 +1,5 @@
 # Importing packages.
 import os
-import requests
 import json
 import httpx
 from dotenv import find_dotenv, load_dotenv
@@ -9,7 +8,9 @@ from openai import OpenAI, AzureOpenAI
 from flask import Flask, request, jsonify
 
 from setup_notion import NotionDatabase
-from setup_callables import *
+from setup_callables import CallablesProps
+from setup_callables import Callables
+from setup_callables import callable_list
 
 # Obtaining values in .env file
 dotenv_path = find_dotenv()
@@ -26,7 +27,10 @@ OPENAI_API_MODEL = os.getenv("OPENAI_API_MODEL")
 NOTION_DRYRUN = int(os.getenv("NOTION_DRYRUN"))
 
 NOTION_INTEGRATION_1_KEY = os.getenv("NOTION_INTEGRATION_1_KEY")
+NOTION_INTEGRATION_2_KEY = os.getenv("NOTION_INTEGRATION_2_KEY")
 NOTION_DATABASE_1_ID = os.getenv("NOTION_DATABASE_1_ID")
+NOTION_DATABASE_2_ID = os.getenv("NOTION_DATABASE_2_ID")
+NOTION_DATABASE_3_ID = os.getenv("NOTION_DATABASE_3_ID")
 
 if NOTION_DRYRUN:
     print("Notion running in dry-run mode...")
@@ -57,7 +61,7 @@ else:
 # Please refer to Advance part in README.md for how you can define a callable tool for openai to use  
 
 #Setting up database
-MyNotionEvents = NotionDatabase(
+my_notion_event_database = NotionDatabase(
     NOTION_INTEGRATION_1_KEY, 
     NOTION_DATABASE_1_ID,
     name = "Event",
@@ -66,7 +70,7 @@ MyNotionEvents = NotionDatabase(
 
 # Preparing Sendable page data for creating a event
 # Please Modify Your own structure of the properties in order for the page to be successfully create
-def notionCreateEvent(event="", start=None, end=None, details=""):
+def notion_create_event(event="", start=None, end=None, details=""):
 
     # Please refer to the prompt about creating the event
     if end == 'n': 
@@ -120,27 +124,27 @@ def notionCreateEvent(event="", start=None, end=None, details=""):
     print(data)
     print("-------------")
 
-    MyNotionEvents.createPage(data)
+    my_notion_event_database.create_page(data)
 
     return True
 
-Call_notionCreateEvent = Callables(
-    notionCreateEvent,
+call_notion_create_event = Callables(
+    notion_create_event,
     "Create an event in notion",
-    Callables_Props(
+    CallablesProps(
         "event",
         "string", 
         "The name of the event.", 
         True
     ),
-    Callables_Props(
+    CallablesProps(
         "start",
         "string", 
         "The start time of the event. e.g. 2024-02-02T13:00:00.000+08:00. \
             The current time is " + datetime.now().isoformat(), 
         True
     ),
-    Callables_Props(
+    CallablesProps(
         "end",
         "string", 
         "The end time of the event. e.g. 2024-02-02T18:00:00.000+08:00. \
@@ -148,7 +152,7 @@ Call_notionCreateEvent = Callables(
                 ". Return 'n' if there is no ending time for the event.", 
         True
     ),
-    Callables_Props(
+    CallablesProps(
         "details",
         "string", 
         "The extra details of the event. Return nothing if there is no detail for the event", 
@@ -156,8 +160,8 @@ Call_notionCreateEvent = Callables(
     )
 )
 
-tool_list = CallableList(
-    Call_notionCreateEvent
+tool_list = callable_list(
+    call_notion_create_event
 )
 
 # Ending of the user-defined functions
@@ -194,9 +198,7 @@ def openaiRunFunction(prompt, humanify_input_for_summarization=True, json_out=Fa
     messages.append({"role": "user", "content": prompt})
     print(tool_list)
     chat_response = openaiChatCompletionRequest(
-        messages, tools= CallableList(
-            Call_notionCreateEvent
-        )   
+        messages, tools= tool_list
     )
     assistant_message = chat_response.choices[0].message
 
